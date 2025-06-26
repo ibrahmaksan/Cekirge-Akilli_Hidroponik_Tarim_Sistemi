@@ -1,4 +1,4 @@
-# Sera İzleme Sistemi (Greenhouse Monitoring System)
+# Sera İzleme Sistemi
 
 Bu proje, Orange Pi 5 Plus üzerinde çalışan bir sera izleme sistemi olup, çeşitli sensörlerden veri toplayarak AWS IoT Core'a gönderir ve AI tabanlı bitki sağlık analizi yapar.
 
@@ -80,8 +80,8 @@ pip install joblib
 ### 5. RKNN Lite Kurulumu (Orange Pi 5 Plus için)
 ```bash
 # RKNN Lite wheel dosyasını indirin (Orange Pi resmi sitesinden)
-# Örnek kurulum:
-pip install rknnlite-1.5.0-cp39-cp39-linux_aarch64.whl
+# Kurulum:
+pip install rknnlite-1.5.0-cp310-cp310-linux_aarch64.whl
 ```
 
 ### 6. I2C ve Serial Ayarları
@@ -138,7 +138,6 @@ rockchip/
 ├── root-CA.crt            # AWS Root CA
 ├── OrangePi5_001.cert.pem # AWS IoT cihaz sertifikası
 ├── OrangePi5_001.private.key # AWS IoT özel anahtar
-└── README.md              # Bu dosya
 ```
 
 ## Çalıştırma
@@ -154,18 +153,6 @@ source venv/bin/activate
 python3 main_final.py
 ```
 
-### 3. Sistem Çıktısı
-Uygulama başladığında şu çıktıları göreceksiniz:
-```
-🔧 Kural tabanlı sağlık değerlendirme sistemi hazır!
-🔍 Optimized sensör okuma başlatıldı:
-   📊 DHT22 & BH1750: 2s aralıklarla
-   🧪 pH (E201C): 30s aralıklarla
-   💧 TDS (Keyestudio): 15s aralıklarla
-✅ AWS IoT'ye bağlanıyor...
-✅ Bağlantı başarılı!
-```
-
 ## Sensör Bağlantıları
 
 ### I2C Bağlantıları (Pin 3,5 - I2C2)
@@ -177,7 +164,7 @@ Uygulama başladığında şu çıktıları göreceksiniz:
 - **pH Sensör**: A3 kanalı
 
 ### Serial Bağlantı
-- **DHT22**: /dev/ttyS6 (115200 baud rate)
+- **DHT22**: /dev/ttyS6 9600 baud rate)
 
 ### USB
 - **Kamera**: USB portuna bağlayın
@@ -244,80 +231,6 @@ sdk/test/python
   "image": "base64_encoded_image_data"
 }
 ```
-
-## Hata Giderme
-
-### 1. I2C Sorunları
-```bash
-# I2C cihazlarını kontrol edin
-sudo i2cdetect -y 2
-
-# I2C izinlerini kontrol edin
-ls -la /dev/i2c-*
-```
-
-### 2. Serial Port Sorunları
-```bash
-# Serial port varlığını kontrol edin
-ls -la /dev/ttyS*
-
-# İzinleri kontrol edin
-sudo chmod 666 /dev/ttyS6
-```
-
-### 3. Kamera Sorunları
-```bash
-# USB kameraları listeleyin
-lsusb
-
-# Video cihazlarını kontrol edin
-ls -la /dev/video*
-```
-
-### 4. AWS Bağlantı Sorunları
-- Certificate dosyalarının doğru konumda olduğunu kontrol edin
-- Internet bağlantısını test edin
-- AWS IoT endpoint'inin doğru olduğunu kontrol edin
-
-## Performans İyileştirmeleri
-
-### 1. CPU Frekansı Ayarları
-```bash
-# CPU governor'u performance moduna alın
-sudo cpufreq-set -g performance
-```
-
-### 2. Swap Alanı
-```bash
-# Swap alanını artırın (gerekirse)
-sudo fallocate -l 2G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-```
-
-## Otomatik Başlatma
-
-### 1. Systemd Service Oluşturma
-```bash
-sudo nano /etc/systemd/system/sera-monitoring.service
-```
-
-### 2. Service Dosyası İçeriği
-```ini
-[Unit]
-Description=Sera Monitoring System
-After=network.target
-
-[Service]
-Type=simple
-User=orangepi
-WorkingDirectory=/path/to/project
-Environment=PATH=/path/to/project/venv/bin
-ExecStart=/path/to/project/venv/bin/python main_final.py
-Restart=always
-
-[Install]
 WantedBy=multi-user.target
 ```
 
