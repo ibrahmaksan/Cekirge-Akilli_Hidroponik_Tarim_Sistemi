@@ -108,6 +108,11 @@ sudo chmod 666 /dev/ttyS6
 # Kullanıcıyı dialout grubuna ekleyin
 sudo usermod -a -G dialout $USER
 ```
+#### DHT22 GPIO Sorunları
+```
+Orange Pi pinleri bazen DHT22 ile direkt başarılı bir şekilde çalışmamaktadır. Bu durumda ESP32 üzerinde DHT22.ino dosyası yüklenerek
+UART üzerinden Orange Pi'ya sensör verileri aktarılabilir.
+```
 
 ### 7. AWS IoT Certificate Dosyalarının Yapılandırılması
 
