@@ -231,9 +231,3 @@ sdk/test/python
   "image": "base64_encoded_image_data"
 }
 ```
-WantedBy=multi-user.target
-```
-
-## Lisans
-
-Bu proje MIT lisansı altında dağıtılmaktadır.
