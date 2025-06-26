@@ -187,46 +187,46 @@ class SimpleYolov8_rknn:
                 
                 print(f"?? {len(boxes)} adet nesne tespit edildi!")
                 
-                # Bounding box'lar� �iz ve sonu�lar� kaydet
+                
                 for i, (box, cls, score) in enumerate(zip(boxes, classes, scores)):
                     box = box.astype(int)
                     
-                    # S�n�f ad�n� al
+                    
                     if int(cls) < len(Coco.CLASSES):
                         class_name = Coco.CLASSES[int(cls)]
                     else:
                         class_name = f"Unknown_Class_{int(cls)}"
                     
-                    # Sonucu kaydet
+                    
                     detection_results.append({
                         'class': class_name,
                         'confidence': float(score),
                         'bbox': [int(box[0]), int(box[1]), int(box[2]), int(box[3])]
                     })
                     
-                    # Box'� �iz - kal�n ye�il �er�eve
+                 
                     cv2.rectangle(img, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 3)
                     
                     # Label metni
                     text = f"{class_name}: {score:.2f}"
                     
-                    # Font ayarlar�
+                    
                     font = cv2.FONT_HERSHEY_SIMPLEX
                     font_scale = 0.7
                     thickness = 2
                     (text_width, text_height), baseline = cv2.getTextSize(text, font, font_scale, thickness)
                     
-                    # Yaz�n�n konumunu ayarla
+                 
                     text_x = max(box[0], 5)
                     text_y = max(box[1] - 10, text_height + 10)
                     
-                    # Yaz� arka plan� - koyu ye�il
+                   
                     cv2.rectangle(img, 
                                 (text_x - 5, text_y - text_height - 5),
                                 (text_x + text_width + 5, text_y + baseline + 5),
                                 (0, 150, 0), -1)
                     
-                    # Yaz�y� beyaz renkte yaz
+                 
                     cv2.putText(img, text, (text_x, text_y), font, font_scale, (255, 255, 255), thickness)
                     
                     print(f"  ?? {i+1}. {class_name} - G�ven: {score:.2f} - Konum: [{box[0]}, {box[1]}, {box[2]}, {box[3]}]")
@@ -244,28 +244,28 @@ def capture_single_image(camera_index=0, width=640, height=480):
     """Tek bir g�rsel yakala"""
     print(f"?? Kamera {camera_index} a��l�yor...")
     
-    # Kameray� a�
+    
     cap = cv2.VideoCapture(camera_index)
     
     if not cap.isOpened():
         print(f"? Kamera {camera_index} a��lamad�!")
         return None
     
-    # Kamera ayarlar�
+   
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
     cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
     
     print("?? G�rsel yakalan�yor...")
     
-    # Birka� frame atla (kamera stabilizasyonu i�in)
+   
     for _ in range(5):
         ret, frame = cap.read()
     
-    # Son frame'i al
+   
     ret, frame = cap.read()
     
-    # Kameray� kapat
+   
     cap.release()
     
     if ret and frame is not None:
@@ -277,7 +277,7 @@ def capture_single_image(camera_index=0, width=640, height=480):
 
 def save_results(detected_image):
     """Sadece detection sonucunu kaydet"""
-    # Detection yap�lm�� g�r�nt�y� kaydet
+   
     detected_filename = "bitki_goruntusu.jpg"
     cv2.imwrite(detected_filename, detected_image)
     print(f"?? Detection sonucu kaydedildi: {detected_filename}")
@@ -289,10 +289,10 @@ def capture_and_detect():
     try:
         print("?? G�rsel yakalan�yor ve detection yap�l�yor...")
         
-        # Model y�kleme
+       
         model = SimpleYolov8_rknn(model='leaf6.rknn', obj_threshold=0.5, nms_threshold=0.65)
         
-        # G�rsel yakalama
+      
         image = capture_single_image(camera_index=0, width=320, height=320)
         
         if image is None:
@@ -300,25 +300,24 @@ def capture_and_detect():
             model.release()
             return None
         
-        # G�r�nt�y� model boyutuna getir
+      
         resized_image = cv2.resize(image, (640, 640))
         
-        # Detection yap
+        
         detected_image, results, inference_time = model.detect_and_draw(resized_image)
         
-        # Sonu�lar� orijinal boyuta geri getir
+        
         detected_image_original_size = cv2.resize(detected_image, (image.shape[1], image.shape[0]))
         
-        # G�r�nt�y� base64'e �evir
+        
         _, buffer = cv2.imencode('.jpg', detected_image_original_size)
         image_base64 = base64.b64encode(buffer).decode('utf-8')
         
-        # Local olarak da kaydet
+        
         cv2.imwrite("bitki_goruntusu.jpg", detected_image_original_size)
         
         print(f"? Detection tamamland�: {len(results)} nesne tespit edildi")
-        
-        # Model'i temizle
+       
         model.release()
         
         return image_base64
