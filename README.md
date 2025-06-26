@@ -1,6 +1,7 @@
 # ÇEKİRGE: Görüntü ve Sensör Tabanlı Akıllı Topraksız Tarım
 
 Topraksız tarım (hydroponics) teknolojisinin otomasyonunu artırmak amacıyla geliştirilen bu proje; makine öğrenmesi, görüntü işleme ve IoT teknolojilerini bir araya getirerek akıllı bir tarım sisteminin temellerini atmayı hedeflemektedir.
+## Not: Kod kısmı için Websitesi ve Rockchip klasörlerini kontrol ediniz.
 
 ## 🚀 Proje Amacı
 
