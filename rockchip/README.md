@@ -1,4 +1,4 @@
-# Sera İzleme Sistemi
+# Orange pi 5 plus üzerinde çalıştırılan kodlar
 
 Bu proje, Orange Pi 5 Plus üzerinde çalışan bir sera izleme sistemi olup, çeşitli sensörlerden veri toplayarak AWS IoT Core'a gönderir ve AI tabanlı bitki sağlık analizi yapar.
 
